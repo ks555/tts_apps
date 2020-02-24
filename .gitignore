@@ -37,11 +37,12 @@
 ehthumbs.db
 Thumbs.db
 
-# Audio files #
+# output files #
 ######################
 *.wav
+
 
 # Folders #
 ######################
 /cereproc
-/audio
+/weather/audio
