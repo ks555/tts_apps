@@ -1,4 +1,5 @@
 import time
+import datetime
 import argparse
 from weather.yr_forecast import YrForecast
 import utils.utils as utils
@@ -19,7 +20,8 @@ def monitor(forecast):
     forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
     while True:
-        time.sleep(30)
+        while datetime.datetime.now().minute not in range(55, 57):
+            time.sleep(60)
         try:
             last_update = check_for_update(forecast.url)
             print(last_update)
@@ -29,6 +31,7 @@ def monitor(forecast):
         except:
             forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
+        time.sleep(60)
 
 
 
