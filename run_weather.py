@@ -20,14 +20,11 @@ def monitor(forecast):
     forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
     while True:
-        while datetime.datetime.now().minute not in range(55, 57):
+        while utils.get_local_time[0].hour not in [5,11,17,23] and datetime.datetime.now().minute not in range(55, 57):    
             time.sleep(60)
         try:
-            last_update = check_for_update(forecast.url)
-            print(last_update)
-            if last_update > forecast.last_update:
-                forecast.generate_forecast_string()
-                forecast.generate_forecast_audio()
+            forecast.generate_forecast_string()
+            forecast.generate_forecast_audio()
         except:
             forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)

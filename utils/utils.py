@@ -67,18 +67,19 @@ def get_local_time(time_zone):
 	local_time = datetime.datetime.now(tz)
 	return(local_time, tz)
 
-
+# check local time to determine time period. Return index for appropriate time period name [morning, afternoon, evening, night]
+# time frame cut offs correspond to 1 hour before the yr.no forecast time frames.
 def day_part(time_zone):
 	tz = pytz.timezone(time_zone)
 	local_time = datetime.datetime.now(tz)
-	if local_time.hour < 4:
-		return 2
-	elif local_time.hour < 12:
-	    return 0
-	elif 12 <= local_time.hour < 18:
+	if 5 <= local_time.hour < 11:
+		return 0
+	elif 11 <= local_time.hour < 17:
 	    return 1
-	else:
+	elif 17 <= local_time.hour < 23:
 	    return 2
+	else:
+	    return 3
 
 
 def next_index_loop(items, idx):
