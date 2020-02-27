@@ -82,7 +82,7 @@ class YrForecast:
             
  
         elif self.language == "romanian":
-            day_parts = [["dimineaţă","dupa amiaza","seară"],["buna dimineata","buna ziua","bună seara"]]
+            day_parts = [["dimineaţă","după amiază","astă seară", "la noapte"],["Buna Dimineata","Buna ziua","Bună seara"]]
             next_part_idx = utils.next_index_loop(day_parts, self.day_part_idx)
             # Romaninan Cereproc voice does not say 'ora' when reading time, it needs to be added in the script.
             # Issue is that 00:00 is read as midnight, so the ora does not make sense. Thus, converting 00:00 to 24
@@ -97,7 +97,7 @@ class YrForecast:
                 day_parts[0][next_part_idx] + " la ora " + forecast_time_2 + " până la ora " + forecast_time_3 + \
                 ", este " + weather[1] + ", cu o temperatură de " + temperature[1] + " grade, cu vânt de " + wind_speed[1].replace(".", ",") + \
                 " metri pe secundă din direcția " + wind_direction[1] + \
-                ". Prognoza meteo din Yr, livrată de Institutul Meteorologic NRK din Norvegia."
+                ". Prognoza meteo furnizată de aplicația wai ar, a institutilui meteorologic din norvegia și a en er ka."
 
         elif self.language == "english":
             day_parts = [["morning","afternoon","evening"],["Good morning","Good afternoon","Good evening"]]
