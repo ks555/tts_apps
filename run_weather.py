@@ -16,21 +16,38 @@ def check_for_update(url):
     return last_update
 
 
+def check_if_update_time(current):
+    update_times = [[datetime.time(5, 55), datetime.time(5, 58)], [datetime.time(11, 55), datetime.time(11, 58)],\
+     [datetime.time(17, 55), datetime.time(17, 58)], [datetime.time(23, 55), datetime.time(23, 58)]]
+    for update_time in update_times:
+        if current >= update_time[0] and current < update_time[1]:
+            return True
+    return False
+
+
 def monitor(forecast):
+    # generate initial forecast audio and text
     forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
-    while True:
-        while datetime.datetime.now().minute not in range(55, 57):
+    updated = False
+    while True: # loop to maintain script active and monitoring
+        # continously check whether it is update time (four periods daily, based on local time zone)
+        while check_if_update_time(utils.get_local_time(forecast.tz)[0].time()) == False:
+        #while utils.get_local_time(forecast.tz)[0].hour not in [5,11,17,23] and utils.get_local_time(forecast.tz)[0].minute not in range(44, 47):    
+            updated = False
             time.sleep(60)
-        try:
-            last_update = check_for_update(forecast.url)
-            print(last_update)
-            if last_update > forecast.last_update:
+        # If it is updated time, complete forecast update     
+        if updated == False:
+            try:
+                # re-generate audio and text
                 forecast.generate_forecast_string()
                 forecast.generate_forecast_audio()
-        except:
-            forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
-                args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
+                updated = True
+            except:
+            # if update fails, try again
+            # !!Need alert mechanism if no update is made during the time period
+                pass
+        # wait 60 seconds before checking time again
         time.sleep(60)
 
 
