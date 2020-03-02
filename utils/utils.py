@@ -61,7 +61,7 @@ def get_day_part(time_zone):
 
 
 def next_index_loop(items, idx):
-	if idx >= len(items):
+	if idx >= len(items)-1:
 		return(0)
 	else:
 		return(idx+1)
