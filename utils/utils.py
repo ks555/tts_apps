@@ -50,11 +50,11 @@ def get_local_time(time_zone):
 def get_day_part(time_zone):
 	tz = pytz.timezone(time_zone)
 	local_time = datetime.datetime.now(tz)
-	if local_time.hour < 4:
+	if local_time.hour < 5:
 		return 3
-	elif local_time.hour < 12:
+	elif local_time.hour < 11:
 	    return 0
-	elif 12 <= local_time.hour < 18:
+	elif 12 <= local_time.hour < 17:
 	    return 1
 	else:
 	    return 2
