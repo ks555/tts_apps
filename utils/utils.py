@@ -54,7 +54,7 @@ def get_day_part(time_zone):
 		return 3
 	elif local_time.hour < 11:
 	    return 0
-	elif 12 <= local_time.hour < 17:
+	elif 11 <= local_time.hour < 17:
 	    return 1
 	else:
 	    return 2
