@@ -15,7 +15,7 @@ def check_for_update(url):
     last_update = utils.get_time(bs.find("lastupdate").text)
     return last_update
 
-
+# times to run updates based on YR forecast interval times
 def check_if_update_time(current):
     update_times = [[datetime.time(5, 55), datetime.time(5, 58)], [datetime.time(11, 55), datetime.time(11, 58)],\
      [datetime.time(17, 55), datetime.time(17, 58)], [datetime.time(23, 55), datetime.time(23, 58)]]

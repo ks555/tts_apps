@@ -44,7 +44,7 @@ class YrForecast:
 
 
     def generate_forecast_audio(self):
-        fpath = "weather/audio/" + self.station + "/"
+        fpath = "weather/audio/" + self.station + "/" + self.get_file_name()
         self.forecast_audio = utils.get_cprc_tts(self.forecast_string, fpath, self.language, self.gender, self.accent, self.strict_gender, \
             self.strict_accent, self.sample_rate, self.audio_format, self.metadata)
 
@@ -52,7 +52,7 @@ class YrForecast:
     def request_current_weather(self):
         try:
             self.tz = self.bs.timezone["id"]
-            self.day_part_idx = utils.day_part(self.tz)
+            self.day_part_idx = utils.get_day_part(self.tz)
             self.set_last_update(self.bs.find("lastupdate"))
             time_frames = self.bs.find_all("time")
             temperature = []
@@ -82,10 +82,10 @@ class YrForecast:
             
  
         elif self.language == "romanian":
-            day_parts = [["dimineaţă","după amiază","astă seară", "la noapte"],["Buna Dimineata","Buna ziua","Bună seara"]]
-            next_part_idx = utils.next_index_loop(day_parts, self.day_part_idx)
+            day_parts = [["dimineaţă","după amiază","astă seară", "la noapte"],["Buna Dimineata","Buna ziua","Bună seara", "Bună seara"]]
+            next_part_idx = utils.next_index_loop(day_parts[0], self.day_part_idx)
             # Romaninan Cereproc voice does not say 'ora' when reading time, it needs to be added in the script.
-            # Issue is that 00:00 is read as midnight, so the ora does not make sense. Thus, converting 00:00 to 24
+            # howeverm 00:00 is read as midnight, so the ora does not make sense. Thus, converting 00:00 to 24
             forecast_time_0 = forecast_time[0].replace("00:00", "24")
             forecast_time_1 = forecast_time[1].replace("00:00", "24")
             forecast_time_2 = forecast_time[2].replace("00:00", "24")
@@ -122,6 +122,12 @@ class YrForecast:
             for row in reader: 
                 if row['ID'] == str(id):
                     return row[self.language]
+
+
+    def get_file_name(self):
+        day_part = utils.get_day_part(self.tz)
+        filename = datetime.datetime.now(pytz.timezone(self.tz)).strftime("%Y-%m-%d") + "_" + str(day_part)
+        return filename
 
 
     def set_last_update(self, last_update_tag):
