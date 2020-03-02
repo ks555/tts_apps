@@ -26,7 +26,7 @@ def get_cprc_tts(text, fpath="", language='english', gender='female',  accent=No
 		r = requests.get(url)
 		with open(fpath + "." + audio_format, 'wb') as f:
 				f.write(r.content)
-		with open(file + ".txt", 'wb') as f:
+		with open(fpath + ".txt", 'wb') as f:
 				f.write(text)
 
 
