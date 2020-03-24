@@ -42,7 +42,8 @@ Thumbs.db
 *.wav
 
 
-# Folders #
+# Directories #
 ######################
 /cereproc
 /weather/audio
+/venv
