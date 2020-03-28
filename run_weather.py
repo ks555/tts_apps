@@ -9,6 +9,7 @@ from random import randrange
 
 
 
+
 def check_for_update(url):
     response = requests.get(url)
     bs = BeautifulSoup(response.content, 'lxml')
