@@ -6,9 +6,9 @@ from news.blog_reader import BlogReader
 import utils.utils as utils
 import requests
 from bs4 import BeautifulSoup
-from readability import Document
 from random import randrange
 from lxml import etree
+
 
 
 
@@ -16,8 +16,8 @@ from lxml import etree
 # blogReader = BlogReader(args.station, args.language, args.gender, args.accent, args.strict_gender, \
 #                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
 blogReader = BlogReader('cc', 'English')
-blogReader.get_content('https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen', 1)
-
+print(blogReader.language)
+blogReader.get_content('https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen', 1, "whocovid")
 
 
 # if __name__ == "__main__":
