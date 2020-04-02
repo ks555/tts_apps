@@ -11,12 +11,9 @@ from lxml import etree
 
 
 
-
-
 # blogReader = BlogReader(args.station, args.language, args.gender, args.accent, args.strict_gender, \
 #                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
 blogReader = BlogReader('cc', 'English')
-print(blogReader.language)
 blogReader.get_content('https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen', 1, "whocovid")
 
 

@@ -9,7 +9,7 @@ import pytz
 from bs4 import BeautifulSoup
 
 
-def get_cprc_tts(text, fpath="", language='english', gender='female',  accent=None, strict_gender=False, \
+def get_cprc_tts(text, fpath, language='english', gender='female',  accent=None, strict_gender=False, \
 				 strict_accent=False, sample_rate='8000', audio_format='mp3', metadata=True):
 		if os.path.exists(os.path.dirname(fpath)) is False:
 			os.mkdir(os.path.dirname(fpath))
