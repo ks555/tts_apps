@@ -93,7 +93,8 @@ class YrForecast:
 
             self.forecast_string = day_parts[1][self.day_part_idx] + " " + self.stations[self.station] + ". Prognoza de " + \
                 day_parts[0][self.day_part_idx] + " până la ora " + forecast_time_1 + ", astăzi " + weather[0] + ", cu o temperatură de " + temperature[0] + \
-                " grade, cu vânt de " + wind_speed[0].replace(".", ",") + " metri pe secundă din direcția est. Prognoza de " + \
+                " grade, cu vânt de " + wind_speed[0].replace(".", ",") + " metri pe secundă din direcția " + wind_direction[0] + \
+                ". Prognoza de " + \
                 day_parts[0][next_part_idx] + " la ora " + forecast_time_2 + " până la ora " + forecast_time_3 + \
                 ", este " + weather[1] + ", cu o temperatură de " + temperature[1] + " grade, cu vânt de " + wind_speed[1].replace(".", ",") + \
                 " metri pe secundă din direcția " + wind_direction[1] + \
