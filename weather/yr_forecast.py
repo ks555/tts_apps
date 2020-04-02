@@ -21,7 +21,7 @@ class YrForecast:
     def __init__(self, station, language, gender="female", accent=None, strict_gender=False, \
             strict_accent=False, sample_rate=8000, audio_format='mp3', metadata=True, time_frame_count=2):
         # !! rootio has this as db entry, with set codes?
-        self.stations = {"sg":"Sfântu Gheorghe", "vv":"Vourvourou", "cu":"Curral das Freiras"}
+        self.stations = {"sg":"Sfântu Gheorghe", "vv":"Vourvourou", "cu":"Curral das Freiras", "be":"Bere Island"}
         self.station = station
         self.language = language
         self.accent = accent
@@ -101,16 +101,16 @@ class YrForecast:
                 ". Prognoza meteo furnizată de aplicația wai ar, a institutilui meteorologic din norvegia și a en er ka."
 
         elif self.language == "english":
-            day_parts = [["morning","afternoon","evening"],["Good morning","Good afternoon","Good evening"]]
+            day_parts = [["this morning","this afternoon","this evening", "tonight"],["Good morning","Good afternoon","Good evening", "Good eventing"]]
             next_part_idx = utils.next_index_loop(day_parts, self.day_part_idx)
-            self.forecast_string = day_parts[1][self.day_part_idx] + " " + "location" + ". The forecast for this " + \
-                day_parts[0][self.day_part_idx] + " from " + forecast_time[0] + \
-                " to " + forecast_time[1] + " is " + weather[0] + ", with a temperature of " + temperature[0] + \
-                " degrees and a wind speed of " + wind_speed[0] + " meters per second from the " + wind_direction[0] + \
-                "direction. The forecast for this " + day_parts[0][next_part_idx] + " from " + forecast_time[2] + \
-                " to " + forecast_time[3] + " is " + weather[1] + " with a temperature of " + temperature[1] + \
-                " degrees and a wind speed of " + wind_speed[1] + " meters per second from the " + wind_direction[1] + \
-                " direction. Weather forecast from Yr, delivered by the Norwegian Meteorological Institute and NRK."
+            self.forecast_string = day_parts[1][self.day_part_idx] + " " + self.stations[self.station] + ". The weather for " + \
+                day_parts[0][self.day_part_idx] + " until " + forecast_time[1] + ", is " + weather[0] + ", with a temperature of " + temperature[0] + \
+                " degrees, with a windspeed of " + wind_speed[0] + " meters per second, in the direction " +  \
+                wind_direction[0] + ". The forecast for " + \
+                day_parts[0][next_part_idx] + " from " + forecast_time[2] + " to " + forecast_time[3] + \
+                ", is " + weather[1] + ", with a temperature of " + temperature[1] + " degrees, and a windspeed of " + wind_speed[1] + \
+                " meters per second, in the direction " + wind_direction[1] + \
+                ". Weather forecast from Y R, delivered by the Norwegian Meteorological Institute and N R K."
         else:
             self.forecast_string = ""
 
@@ -142,6 +142,8 @@ class YrForecast:
             self.url = 'https://www.yr.no/place/Romania/Tulcea/Sf%C3%A2ntu_Gheorghe/forecast.xml'
         elif self.station == 'vv':
             self.url = 'https://www.yr.no/place/Romania/Other/V%C3%A2rvoru/forecast.xml'
+        elif self.station == 'be':
+            self.url = 'https://www.yr.no/place/Ireland/Other/Bere_Island/forecast.xml'
         else: self.url = None
 
 
