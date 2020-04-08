@@ -35,6 +35,7 @@ class YrForecast:
         self.generate_forecast_string()
         if self.forecast_string is not None:
             self.generate_forecast_audio()
+            self.update_xml()
 
 
     def generate_forecast_string(self):
@@ -44,8 +45,8 @@ class YrForecast:
 
 
     def generate_forecast_audio(self):
-        fpath = "weather/audio/" + self.station + "/" + self.get_file_name()
-        self.forecast_audio = utils.get_cprc_tts(self.forecast_string, fpath, self.language, self.gender, self.accent, self.strict_gender, \
+        self.fpath = "weather/audio/" + self.station + "/" + self.get_file_name()
+        self.forecast_audio = utils.get_cprc_tts(self.forecast_string, self.fpath, self.language, self.gender, self.accent, self.strict_gender, \
             self.strict_accent, self.sample_rate, self.audio_format, self.metadata)
 
 
@@ -124,6 +125,32 @@ class YrForecast:
                 if row['ID'] == str(id):
                     return row[self.language]
 
+    def update_xml(self, location = "https://ttstestfeeds.s3.amazonaws.com/audio/weather", xmlPath = 'podcast.xml'):
+        # adujust path to fit S3 buckets. maybe should coordinate this script and EC2 to match s3 buckets
+        audioFile = os.path.join(os.path.basename(self.fpath) + "." + self.audio_format)
+        audioFileWeb = os.path.join(location, self.station, audioFile)
+        # get file size in bytes
+        length = str(utils.get_file_size(os.path.join("weather/audio", self.station, audioFile)))
+        # open current xml file
+        with open(xmlPath, 'r') as file:
+            rss = file.read()
+        # create new item, with subelements
+        root = etree.fromstring(rss)
+        items = root.findall(".//item")
+        newItem = etree.Element("item")
+        etree.SubElement(newItem, "title").text = os.path.splitext(os.path.basename(audioFileWeb))[0]
+        etree.SubElement(newItem, "link").text = os.path.dirname(audioFileWeb)
+        etree.SubElement(newItem, "guid").text = audioFileWeb
+        etree.SubElement(newItem, "description").text = ""
+        etree.SubElement(newItem, "enclosure", url=audioFileWeb, length=length, type="audio/mpeg")
+        etree.SubElement(newItem, "category").text = "TTS"
+        etree.SubElement(newItem, "pubDate").text = str(utils.get_local_time(self.tz)[0])
+        # insert new item as first item (subelement of channel element)
+        root[0].insert(10, newItem)
+        # create element tree from updated root and write back to xml file
+        et = etree.ElementTree(root)
+        et.write(xmlPath, pretty_print=True)
+
 
     def get_file_name(self):
         day_part = utils.get_day_part(self.tz)
@@ -149,6 +176,10 @@ class YrForecast:
 
     def get_yr_URL(self):
         return self.url
+
+    #Create podcast
+    # call when audio gen is successful
+    # This will call a utils method, takes filename? other required info
 
 
 if __name__ == "__main__":

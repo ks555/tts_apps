@@ -7,6 +7,7 @@ from suds.client import Client
 import ConfigParser
 import pytz
 from bs4 import BeautifulSoup
+from lxml import etree
 
 
 def get_cprc_tts(text, fpath, language='english', gender='female',  accent=None, strict_gender=False, \
@@ -71,3 +72,14 @@ def next_index_loop(items, idx):
 def get_time(time_string):
     time = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S')
     return(time.strftime("%H:%M"))
+
+
+def update_rss_feed(episode_path="/weather/be/2020-04-02_2.mp3", tz="GMT"):
+	with open('podcast.xml', 'r') as file:
+		rss = file.read()
+	# print(rss)
+	root = etree.fromstring(rss)
+
+
+def get_file_size(file):
+    return os.path.getsize(file)
