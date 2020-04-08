@@ -125,10 +125,16 @@ class YrForecast:
                 if row['ID'] == str(id):
                     return row[self.language]
 
-    def update_xml(self, location = "https://ttstestfeeds.s3.amazonaws.com/audio/weather", xmlPath = 'podcast.xml'):
+    def update_xml(self, location = "https://ttstestfeeds.s3.amazonaws.com/audio/weather"):
         # adujust path to fit S3 buckets. maybe should coordinate this script and EC2 to match s3 buckets
         audioFile = os.path.join(os.path.basename(self.fpath) + "." + self.audio_format)
         audioFileWeb = os.path.join(location, self.station, audioFile)
+        xmlPath = os.path.join("podcasts", "weather_" + self.station + "_" + self.language + ".xml")
+        print(xmlPath)
+        if os.path.exists(xmlPath) is False:
+            print("make an xml file for this podcast in the xml folder")
+            return None
+
         # get file size in bytes
         length = str(utils.get_file_size(os.path.join("weather/audio", self.station, audioFile)))
         # open current xml file
