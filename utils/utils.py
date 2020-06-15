@@ -7,7 +7,7 @@ from suds.client import Client
 import ConfigParser
 import pytz
 from bs4 import BeautifulSoup
-
+from geopy.geocoders import Nominatim
 
 def get_cprc_tts(text, fpath="", language='english', gender='female',  accent=None, strict_gender=False, \
 				 strict_accent=False, sample_rate='8000', audio_format='mp3', metadata=True):
@@ -71,3 +71,18 @@ def next_index_loop(items, idx):
 def get_time(time_string):
     time = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S')
     return(time.strftime("%H:%M"))
+
+
+ # Convert time string of a specific formate to time object, return 
+def get_time(time_string):
+    time = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S')
+    return(time.strftime("%H:%M"))
+
+
+# get lat long based on city name using geopy and Nominatim provider
+def get_coordinates(placename):
+    geolocator = Nominatim(user_agent="rootio_weather")
+    location = geolocator.geocode(placename, exactly_one=False, featuretype='city')
+    for l in location:
+    	print((l.latitude, l.longitude))
+    	print(l.raw)
