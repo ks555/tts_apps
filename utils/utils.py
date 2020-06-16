@@ -7,7 +7,7 @@ from suds.client import Client
 import ConfigParser
 import pytz
 from bs4 import BeautifulSoup
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GeoNames
 
 def get_cprc_tts(text, fpath="", language='english', gender='female',  accent=None, strict_gender=False, \
 				 strict_accent=False, sample_rate='8000', audio_format='mp3', metadata=True):
@@ -81,8 +81,20 @@ def get_time(time_string):
 
 # get lat long based on city name using geopy and Nominatim provider
 def get_coordinates(placename):
-    geolocator = Nominatim(user_agent="rootio_weather")
-    location = geolocator.geocode(placename, exactly_one=False, featuretype='city')
+    geolocator = GeoNames(user_agent='rootio_weather',  username='kms555')
+    location = geolocator.geocode(placename, exactly_one=True)
     for l in location:
-    	print((l.latitude, l.longitude))
-    	print(l.raw)
+    	return(l.latitude, l.longitude)
+
+def get_place_name(placename):
+    geolocator = GeoNames(user_agent='rootio_weather',  username='kms555')
+    location = geolocator.geocode(placename, exactly_one=True)
+    for l in location:
+    	return(l.raw['toponymName'].encode('UTF-8'))
+
+
+def set_met_URL(placename):
+    lat, lon = get_coordinates(location)
+    url = "https://api.met.no//weatherapi/locationforecast/2.0/compact?lat={0}&lon={1}"\
+    .format(round(lat, 4), round(lon, 4))
+    return url
