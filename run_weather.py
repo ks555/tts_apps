@@ -27,7 +27,7 @@ def check_if_update_time(current):
 
 def monitor(forecast):
     # generate initial forecast audio and text
-    forecast = YrForecast(args.station, args.language, args.gender, args.accent, args.strict_gender, \
+    forecast = YrForecast(args.location, args.language, args.gender, args.accent, args.strict_gender, \
                 args.strict_accent, args.sample_rate, args.audio_format, args.metadata, args.time_frame_count)
     updated = False
     while True: # loop to maintain script active and monitoring
@@ -54,7 +54,8 @@ def monitor(forecast):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generates wav file based on current forecast on yr.no')
-    parser.add_argument('station', type=str, help='station location code (cu, ma)')
+    # location coords will be based on city name using geopy and Nominatim provider
+    parser.add_argument('location', type=str, help='City/town name, or write as \'city, county, country\'')
     parser.add_argument('language', type=str, help='language')
     parser.add_argument('-g', '--gender', type=str, default='female', help='Preferred gender of speaker)')
     parser.add_argument('-a', '--accent', type=str, default=None, help='Preferred gender of speaker)')

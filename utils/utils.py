@@ -82,19 +82,27 @@ def get_time(time_string):
 # get lat long based on city name using geopy and Nominatim provider
 def get_coordinates(placename):
     geolocator = GeoNames(user_agent='rootio_weather',  username='kms555')
-    location = geolocator.geocode(placename, exactly_one=True)
-    for l in location:
-    	return(l.latitude, l.longitude)
-
-def get_place_name(placename):
-    geolocator = GeoNames(user_agent='rootio_weather',  username='kms555')
-    location = geolocator.geocode(placename, exactly_one=True)
-    for l in location:
-    	return(l.raw['toponymName'].encode('UTF-8'))
+    locations = geolocator.geocode(placename, exactly_one=False)
+    # only returns first one, keeping iteration for now while deciding on design
+    for location in locations:
+    	return(location.latitude, location.longitude)
 
 
-def set_met_URL(placename):
-    lat, lon = get_coordinates(location)
-    url = "https://api.met.no//weatherapi/locationforecast/2.0/compact?lat={0}&lon={1}"\
+def get_place_names(placename, region, countryCode):
+    geolocator = GeoNames(user_agent='rootio_weather', username='kms555')
+    locations = geolocator.geocode(placename, exactly_one=False)
+    # only returns first one, keeping iteration for now while deciding on design
+    for location in locations:
+        if(location.raw['toponymName'] == placename and location.raw['adminName1'] == region and \
+        	location.raw['countryCode'] == countryCode):
+        	print(location.raw)
+        	return(location.raw['toponymName'].encode('UTF-8'), \
+        		location.raw['countryName'], location.raw['adminName1'], location.latitude, location.longitude)
+
+
+
+# not being used
+def set_met_URL(lat, lon):
+    url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={0}&lon={1}"\
     .format(round(lat, 4), round(lon, 4))
     return url
