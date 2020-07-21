@@ -1,11 +1,7 @@
 # -*- coding: UTF-8 -*
-import requests
 import argparse
 import datetime
 import utils.utils as utils
-import json
-from xml.etree import ElementTree as ET
-from lxml import etree, html
 import pytz
 import csv
 import sys
@@ -18,11 +14,11 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 class YrForecast:
 
 
-    def __init__(self, station, language, gender="female", accent=None, strict_gender=False, \
+    def __init__(self, location, language, gender="female", accent=None, strict_gender=False, \
             strict_accent=False, sample_rate=8000, audio_format='mp3', metadata=True, time_frame_count=2):
         # !! rootio has this as db entry, with set codes?
         self.stations = {"sg":"Sfântu Gheorghe", "vv":"Vourvourou", "cu":"Curral das Freiras"}
-        self.station = station
+        self.location = location
         self.language = language
         self.accent = accent
         self.gender = gender
@@ -44,7 +40,7 @@ class YrForecast:
 
 
     def generate_forecast_audio(self):
-        fpath = "weather/audio/" + self.station + "/" + self.get_file_name()
+        fpath = "weather/audio/" + self.location + "/" + self.get_file_name()
         self.forecast_audio = utils.get_cprc_tts(self.forecast_string, fpath, self.language, self.gender, self.accent, self.strict_gender, \
             self.strict_accent, self.sample_rate, self.audio_format, self.metadata)
 
@@ -61,7 +57,7 @@ class YrForecast:
             percipitation = []
             weather = []
             forecast_time = []
-            for i in range(0,self.time_frame_count):
+            for i in range(0, self.time_frame_count):
                 forecast_time.append(utils.get_time(time_frames[i]['from']))
                 forecast_time.append(utils.get_time(time_frames[i]['to']))
                 temperature.append(time_frames[i].temperature['value'])
@@ -91,7 +87,7 @@ class YrForecast:
             forecast_time_2 = forecast_time[2].replace("00:00", "24")
             forecast_time_3 = forecast_time[3].replace("00:00", "24")
 
-            self.forecast_string = day_parts[1][self.day_part_idx] + " " + self.stations[self.station] + ". Prognoza de " + \
+            self.forecast_string = day_parts[1][self.day_part_idx] + " " + self.stations[self.location] + ". Prognoza de " + \
                 day_parts[0][self.day_part_idx] + " până la ora " + forecast_time_1 + ", astăzi " + weather[0] + ", cu o temperatură de " + temperature[0] + \
                 " grade, cu vânt de " + wind_speed[0].replace(".", ",") + " metri pe secundă din direcția " + wind_direction[0] + \
                 ". Prognoza de " + \
@@ -134,24 +130,30 @@ class YrForecast:
     def set_last_update(self, last_update_tag):
         self.last_update = utils.get_time(last_update_tag.text)
 
-
+# !!!change all this
     def set_yr_URL(self):
-        if self.station == 'cu':
+        if self.location == 'cu':
             self.url = 'https://www.yr.no/place/Portugal/Madeira/Curral_das_Freiras/forecast.xml'
-        elif self.station == 'sg':
+        elif self.location == 'sg':
             self.url = 'https://www.yr.no/place/Romania/Tulcea/Sf%C3%A2ntu_Gheorghe/forecast.xml'
-        elif self.station == 'vv':
+        elif self.location == 'vv':
             self.url = 'https://www.yr.no/place/Romania/Other/V%C3%A2rvoru/forecast.xml'
-        else: self.url = None
+        else:
+            l = get_place_names(self.location)
 
 
-    def get_yr_URL(self):
+    def set_met_URL(self):
+        lat, lon = utils.get_coordinates(self.location)
+        self.url = "https://api.met.no//weatherapi/locationforecast \
+        /2.0/compact?lat={0}&lon={1}".format(lat, lon)
+
+    def get_URL(self):
         return self.url
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generates wav file based on current forecast on yr.no')
-    parser.add_argument('station', type=str, help='station location code (cu, ma)')
+    parser.add_argument('location', type=str, help='City/town name, or write as \'city, county, country\'')
     parser.add_argument('language', type=str, help='language')
     parser.add_argument('-g', '--gender', type=str, default='female', help='Preferred gender of speaker)')
     parser.add_argument('-a', '--accent', type=str, default=None, help='Preferred gender of speaker)')
