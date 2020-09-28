@@ -1,5 +1,7 @@
 ## Overview of TTS Weather Forecaster
-![Application workflow](weather/weather diagram.png)
+![Application workflow](https://github.com/ks555/tts_apps/blob/master/weather/weather%20diagram.png)
+
+
 ## Forecast data source
 [Yr.no](https://www.yr.no/)
 [API help](https://hjelp.yr.no/hc/en-us)
@@ -12,8 +14,9 @@ The current weather application generates new forecast audio on the following sc
 ### Translation tables
 Non-numeric data (weather description, wind direction) provided by the API is translated to the target language using translation tables. If additional language functionality is added, these tables will need to be updated.
 
-https://github.com/ks555/tts_apps/weather/direction_translation_yrno.csv
-https://github.com/ks555/tts_apps/weather/weather_translation_yrno.csv
+[directions](https://github.com/ks555/tts_apps/blob/master/weather/direction_translation_yrno.csv)
+
+[forecasts](https://github.com/ks555/tts_apps/weather/weather_translation_yrno.csv)
 
 ## Technical setup
 
@@ -29,7 +32,7 @@ The S3 bucket is formatted as a simple file hosting website (using an index.html
 Files are named by date with _0, _1, _2 to indicate time of day of forecast. In the case of the Romanian stations, they have their own code running that pulls the most recent file and places it on the appropriate place in their schedule.
 
 ### Speech synthesis
-Currently generates speech audio through cerecloud API from cereproc, using Rootio credentials which recieves free credits from Cereproc for the duration of the project.
+Currently generates speech audio through cerecloud API from cereproc, using Rootio credentials which recieves free credits from Cereproc for the duration of the project. The method of access is a request done through a duplicate of CereprocRestAgent class in Rootio.
 
 ## Forecast text content
 Example text of  a forecast in english.*[words in italics vary based on time of day, location and forecast]*.
